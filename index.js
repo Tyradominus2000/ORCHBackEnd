@@ -58,6 +58,25 @@ app.post("/AddUser", (req, res) => {
   });
 });
 
+app.post("/GetUser", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const sql = `SELECT * FROM user WHERE email="${email}"`;
+  connection.query(sql, (err, result) => {
+    console.log(result);
+    if (err) throw err;
+    bcrypt.compare(password, result.password, function (err, result) {
+      if (result) {
+        console.log("Utilisateur non existant");
+        res.send(JSON.stringify(false));
+      } else {
+        console.log("Utilisateur existant");
+        res.send(JSON.stringify(true));
+      }
+    });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server Node écoutant sur le port ${port}`);
 });
