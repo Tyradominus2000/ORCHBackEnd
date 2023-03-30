@@ -48,11 +48,11 @@ app.post("/AddUser", (req, res) => {
         connection.query(sql, values, (err, result) => {
           if (err) throw err;
           console.log("Utilisateur ajouté à la base de données");
-          res.send(JSON.stringify(true));
+          res.send(JSON.stringify(false));
         });
       } else {
         console.log("Utilisateur existant");
-        res.send(JSON.stringify(false));
+        res.send(JSON.stringify(true));
       }
     });
   });
@@ -61,19 +61,23 @@ app.post("/AddUser", (req, res) => {
 app.post("/GetUser", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const sql = `SELECT * FROM user WHERE email="${email}"`;
-  connection.query(sql, (err, result) => {
-    console.log(result);
+  console.log(email);
+  console.log(password);
+
+  const sql = `SELECT * FROM user WHERE email=?`;
+  const values = [email];
+  connection.query(sql, values, async (err, result) => {
+    console.log(result[0].password);
     if (err) throw err;
-    bcrypt.compare(password, result.password, function (err, result) {
-      if (result) {
-        console.log("Utilisateur non existant");
-        res.send(JSON.stringify(false));
-      } else {
-        console.log("Utilisateur existant");
-        res.send(JSON.stringify(true));
-      }
-    });
+    const response =  bcrypt.compare(password, result[0].password);
+    console.log(response);
+    if (response) {
+      console.log("Utilisateur existant");
+      res.send(JSON.stringify(true));
+    } else {
+      console.log("Utilisateur non existant");
+      res.send(JSON.stringify(false));
+    }
   });
 });
 
