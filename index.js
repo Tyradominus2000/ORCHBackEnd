@@ -58,26 +58,48 @@ app.post("/AddUser", (req, res) => {
   });
 });
 
-app.post("/GetUser", (req, res) => {
+app.post("/VerifyUser", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
+  let resultat = {};
   console.log(email);
   console.log(password);
 
   const sql = `SELECT * FROM user WHERE email=?`;
   const values = [email];
   connection.query(sql, values, async (err, result) => {
-    console.log(result[0].password);
     if (err) throw err;
-    const response =  bcrypt.compare(password, result[0].password);
-    console.log(response);
-    if (response) {
-      console.log("Utilisateur existant");
-      res.send(JSON.stringify(true));
+    console.log(result[0]);
+    if (result[0] != null) {
+      const response = bcrypt.compare(password, result[0].password);
+      console.log(response);
+      if (response) {
+        console.log("Utilisateur existant");
+        resultat.logged = true;
+        resultat.id = result[0].id;
+        res.send(JSON.stringify(resultat));
+      } else {
+        resultat.logged = false;
+        console.log("Mot de incorect");
+        res.send(JSON.stringify(resultat));
+      }
     } else {
+      resultat.logged = false;
       console.log("Utilisateur non existant");
-      res.send(JSON.stringify(false));
+      res.send(JSON.stringify(resultat));
     }
+  });
+});
+
+app.post("/GetUser", (req, res) => {
+  const id = req.body.id;
+  console.log(id);
+
+  const sql = `SELECT id, email, name FROM user WHERE id=?`;
+  const values = [id];
+  connection.query(sql, values, (err, result) => {
+    console.log(result);
+    res.send(JSON.stringify(result));
   });
 });
 
