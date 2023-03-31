@@ -103,6 +103,11 @@ app.post("/GetUser", (req, res) => {
   });
 });
 
+app.post("/UploadPP", (req, res) => {
+  console.log("req.body " + req.body);
+  res.send(true);
+});
+
 app.listen(port, () => {
   console.log(`Server Node écoutant sur le port ${port}`);
 });
