@@ -48,11 +48,11 @@ app.post("/AddUser", (req, res) => {
         connection.query(sql, values, (err, result) => {
           if (err) throw err;
           console.log("Utilisateur ajouté à la base de données");
-          res.send(JSON.stringify(false));
+          res.send(JSON.stringify(true));
         });
       } else {
         console.log("Utilisateur existant");
-        res.send(JSON.stringify(true));
+        res.send(JSON.stringify(false));
       }
     });
   });
