@@ -101,9 +101,9 @@ app.post("/GetUserEmail", (req, res) => {
   connection.query(sql, values, (err, result) => {
     console.log(result);
     if (result.length > 0) {
-      res.send(JSON.stringify(true));
-    } else {
       res.send(JSON.stringify(false));
+    } else {
+      res.send(JSON.stringify(true));
     }
   });
 });
