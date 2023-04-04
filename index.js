@@ -33,23 +33,17 @@ app.post("/AddUser", (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
-
+  //hash the password
   bcrypt.hash(password, saltRounds, function (err, hash) {
     // Store hash in your password DB.
     if (err) throw err;
-    if (result.length === 0) {
-      const sql = ` INSERT INTO user (name, email, password) VALUES ( ?, ?, ?)`;
-      const values = [username, email, hash];
-
-      connection.query(sql, values, (err, result) => {
-        if (err) throw err;
-        console.log("Utilisateur ajouté à la base de données");
-        res.send(JSON.stringify(true));
-      });
-    } else {
-      console.log("Utilisateur existant");
-      res.send(JSON.stringify(false));
-    }
+    const sql = ` INSERT INTO user (name, email, password) VALUES ( ?, ?, ?)`;
+    const values = [username, email, hash];
+    connection.query(sql, values, (err, result) => {
+      if (err) throw err;
+      console.log("Utilisateur ajouté à la base de données");
+      res.send(JSON.stringify(true));
+    });
   });
 });
 
