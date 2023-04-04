@@ -33,28 +33,23 @@ app.post("/AddUser", (req, res) => {
   const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
-  const sql = `SELECT * FROM user WHERE email="${email}"`;
 
   bcrypt.hash(password, saltRounds, function (err, hash) {
     // Store hash in your password DB.
     if (err) throw err;
+    if (result.length === 0) {
+      const sql = ` INSERT INTO user (name, email, password) VALUES ( ?, ?, ?)`;
+      const values = [username, email, hash];
 
-    connection.query(sql, (err, result) => {
-      if (err) throw err;
-      if (result.length === 0) {
-        const sql = ` INSERT INTO user (name, email, password) VALUES ( ?, ?, ?)`;
-        const values = [username, email, hash];
-
-        connection.query(sql, values, (err, result) => {
-          if (err) throw err;
-          console.log("Utilisateur ajouté à la base de données");
-          res.send(JSON.stringify(true));
-        });
-      } else {
-        console.log("Utilisateur existant");
-        res.send(JSON.stringify(false));
-      }
-    });
+      connection.query(sql, values, (err, result) => {
+        if (err) throw err;
+        console.log("Utilisateur ajouté à la base de données");
+        res.send(JSON.stringify(true));
+      });
+    } else {
+      console.log("Utilisateur existant");
+      res.send(JSON.stringify(false));
+    }
   });
 });
 
@@ -100,6 +95,22 @@ app.post("/GetUser", (req, res) => {
   connection.query(sql, values, (err, result) => {
     console.log(result);
     res.send(JSON.stringify(result));
+  });
+});
+
+app.post("/GetUserEmail", (req, res) => {
+  const email = req.body.key;
+  console.log(email);
+
+  const sql = `SELECT * FROM user WHERE email=?`;
+  const values = [email];
+  connection.query(sql, values, (err, result) => {
+    console.log(result);
+    if (result.length > 0) {
+      res.send(JSON.stringify(true));
+    } else {
+      res.send(JSON.stringify(false));
+    }
   });
 });
 
