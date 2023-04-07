@@ -44,7 +44,7 @@ app.post("/AddUser", (req, res) => {
   bcrypt.hash(password, saltRounds, function (err, hash) {
     // Store hash in your password DB.
     if (err) throw err;
-    const sql = ` INSERT INTO users (name, email, password) VALUES ( ?, ?, ?)`;
+    const sql = ` INSERT INTO users (Username, Useremail, Userpassword) VALUES ( ?, ?, ?)`;
     const values = [username, email, hash];
     connection.query(sql, values, (err, result) => {
       if (err) throw err;
@@ -61,7 +61,7 @@ app.post("/VerifyUser", (req, res) => {
   console.log(email);
   console.log(password);
 
-  const sql = `SELECT * FROM users WHERE email=?`;
+  const sql = `SELECT * FROM users WHERE Useremail=?`;
   const values = [email];
   connection.query(sql, values, async (err, result) => {
     if (err) throw err;
@@ -91,7 +91,7 @@ app.post("/GetUser", (req, res) => {
   const id = req.body.id;
   console.log(id);
 
-  const sql = `SELECT id, email, name FROM users WHERE idUser=?`;
+  const sql = `SELECT idUser, Useremail, Username FROM users WHERE idUser=?`;
   const values = [id];
   connection.query(sql, values, (err, result) => {
     console.log(result);
@@ -103,7 +103,7 @@ app.post("/GetUserEmail", (req, res) => {
   const email = req.body.key;
   console.log(email);
 
-  const sql = `SELECT * FROM users WHERE email=?`;
+  const sql = `SELECT * FROM users WHERE Useremail=?`;
   const values = [email];
   connection.query(sql, values, (err, result) => {
     console.log(result);
