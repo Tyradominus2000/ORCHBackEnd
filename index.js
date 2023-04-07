@@ -12,7 +12,13 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "ORCH",
+  database: "orchfull",
+});
+const connection2 = mysql.createConnection({
+  host: "sql7.freesqldatabase.com",
+  user: "sql7611790",
+  password: "v9snT4PGhc",
+  database: "sql7611790",
 });
 
 connection.connect((err) => {
@@ -37,7 +43,7 @@ app.post("/AddUser", (req, res) => {
   bcrypt.hash(password, saltRounds, function (err, hash) {
     // Store hash in your password DB.
     if (err) throw err;
-    const sql = ` INSERT INTO user (name, email, password) VALUES ( ?, ?, ?)`;
+    const sql = ` INSERT INTO users (name, email, password) VALUES ( ?, ?, ?)`;
     const values = [username, email, hash];
     connection.query(sql, values, (err, result) => {
       if (err) throw err;
@@ -54,7 +60,7 @@ app.post("/VerifyUser", (req, res) => {
   console.log(email);
   console.log(password);
 
-  const sql = `SELECT * FROM user WHERE email=?`;
+  const sql = `SELECT * FROM users WHERE email=?`;
   const values = [email];
   connection.query(sql, values, async (err, result) => {
     if (err) throw err;
@@ -84,7 +90,7 @@ app.post("/GetUser", (req, res) => {
   const id = req.body.id;
   console.log(id);
 
-  const sql = `SELECT id, email, name FROM user WHERE id=?`;
+  const sql = `SELECT id, email, name FROM users WHERE idUser=?`;
   const values = [id];
   connection.query(sql, values, (err, result) => {
     console.log(result);
@@ -96,7 +102,7 @@ app.post("/GetUserEmail", (req, res) => {
   const email = req.body.key;
   console.log(email);
 
-  const sql = `SELECT * FROM user WHERE email=?`;
+  const sql = `SELECT * FROM users WHERE email=?`;
   const values = [email];
   connection.query(sql, values, (err, result) => {
     console.log(result);
