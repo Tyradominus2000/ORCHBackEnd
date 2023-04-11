@@ -6,8 +6,7 @@ const saltRounds = 10;
 
 const app = express();
 const http = require("http");
-const port2 = 3306;
-const port = 3000;
+const port = 8000;
 
 const connection2 = mysql.createConnection({
   host: "localhost",
@@ -44,7 +43,7 @@ app.post("/AddUser", (req, res) => {
   bcrypt.hash(password, saltRounds, function (err, hash) {
     // Store hash in your password DB.
     if (err) throw err;
-    const sql = ` INSERT INTO users (Username, Useremail, Userpassword) VALUES ( ?, ?, ?)`;
+    const sql = `INSERT INTO users (Username, Useremail, Userpassword) VALUES ( ?, ?, ?)`;
     const values = [username, email, hash];
     connection.query(sql, values, (err, result) => {
       if (err) throw err;
@@ -67,16 +66,17 @@ app.post("/VerifyUser", (req, res) => {
     if (err) throw err;
     console.log(result[0]);
     if (result[0] != null) {
-      const response = bcrypt.compare(password, result[0].password);
+      const response = bcrypt.compare(password, result[0].Userpassword);
       console.log(response);
       if (response) {
         console.log("Utilisateur existant");
         resultat.logged = true;
-        resultat.id = result[0].id;
+        resultat.id = result[0].idUser;
         res.send(JSON.stringify(resultat));
       } else {
-        resultat.logged = false;
-        console.log("Mot de incorect");
+        resultat[0].logged = false;
+        resultat[0].mdp = true;
+        console.log("Mot de passe incorect");
         res.send(JSON.stringify(resultat));
       }
     } else {
