@@ -94,6 +94,7 @@ app.post("/GetUser", (req, res) => {
   const sql = `SELECT idUser, Useremail, Username FROM users WHERE idUser=?`;
   const values = [id];
   connection.query(sql, values, (err, result) => {
+    if (err) throw err;
     console.log(result);
     res.send(JSON.stringify(result));
   });
@@ -106,6 +107,7 @@ app.post("/GetUserEmail", (req, res) => {
   const sql = `SELECT * FROM users WHERE Useremail=?`;
   const values = [email];
   connection.query(sql, values, (err, result) => {
+    if (err) throw err;
     console.log(result);
     if (result.length > 0) {
       res.send(JSON.stringify(false));
