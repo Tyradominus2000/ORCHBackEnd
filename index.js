@@ -8,13 +8,13 @@ const app = express();
 const http = require("http");
 const port = 8000;
 
-const connection2 = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "orchfull",
 });
-const connection = mysql.createConnection({
+const connection2 = mysql.createConnection({
   host: "sql7.freesqldatabase.com",
   user: "sql7611790",
   password: "v9snT4PGhc",
