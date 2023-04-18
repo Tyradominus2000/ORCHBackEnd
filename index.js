@@ -138,6 +138,15 @@ app.get("/GetComponent", (req, res) => {
   });
 });
 
+app.get("/GetComponentSearch/*", (req, res) => {
+  sql = "SELECT * from component";
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server Node écoutant sur le port ${port}`);
 });
