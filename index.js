@@ -7,6 +7,8 @@ const saltRounds = 10;
 const app = express();
 const http = require("http");
 const port = 8000;
+const jsonwebtoken = require("jsonwebtoken");
+const { key } = require("./key");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -69,7 +71,12 @@ app.post("/VerifyUser", (req, res) => {
       const response = bcrypt.compare(password, result[0].Userpassword);
       console.log(response);
       if (response) {
-        console.log("Utilisateur existant");
+        const token = jsonwebtoken.sign({}, key, {
+          subject: result[0].idUser.toString(),
+          expiresIn: 3600 * 24 * 30 * 6,
+          algorithm: "RS256",
+        });
+        res.cookie("token", token);
         resultat.logged = true;
         resultat.id = result[0].idUser;
         res.send(JSON.stringify(resultat));
@@ -122,14 +129,14 @@ app.post("/UploadPP", (req, res) => {
   res.send(true);
 });
 
-app.get("/GetComponent", (req, res)=> {
-  sql = "SELECT * from component"
+app.get("/GetComponent", (req, res) => {
+  sql = "SELECT * from component";
   connection.query(sql, (err, result) => {
     if (err) throw err;
-    console.log(result)
-    res.send(JSON.stringify(result))
-  })
-})
+    console.log(result);
+    res.send(JSON.stringify(result));
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server Node écoutant sur le port ${port}`);
