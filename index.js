@@ -2,13 +2,13 @@ const bodyparser = require("body-parser");
 const express = require("express");
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
-const saltRounds = 10;
-
-const app = express();
-const http = require("http");
-const port = 8000;
 const jsonwebtoken = require("jsonwebtoken");
-const { key } = require("./key");
+const http = require("http");
+const app = express();
+
+const { key, keyPub } = require("./key");
+const saltRounds = 10;
+const port = 8000;
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -107,23 +107,6 @@ app.post("/GetUser", (req, res) => {
   });
 });
 
-app.post("/GetUserEmail", (req, res) => {
-  const email = req.body.key;
-  console.log(email);
-
-  const sql = `SELECT * FROM users WHERE Useremail=?`;
-  const values = [email];
-  connection.query(sql, values, (err, result) => {
-    if (err) throw err;
-    console.log(result);
-    if (result.length > 0) {
-      res.send(JSON.stringify(false));
-    } else {
-      res.send(JSON.stringify(true));
-    }
-  });
-});
-
 app.post("/UploadPP", (req, res) => {
   console.log("req.body " + req.body);
   res.send(true);
@@ -133,7 +116,34 @@ app.get("/GetComponent", (req, res) => {
   sql = "SELECT * from component";
   connection.query(sql, (err, result) => {
     if (err) throw err;
-    console.log(result);
+    // console.log(result);
+    res.send(JSON.stringify(result));
+  });
+});
+
+app.get("/GetComponent/:component", (req, res) => {
+  const component = req.params.component;
+  let sql = "";
+  switch (component) {
+    case "CPU":
+      sql = "SELECT * FROM component_cpu";
+      break;
+    case "GPU":
+      sql = "SELECT * FROM component_gpu";
+      break;
+    case "MB":
+      sql = "SELECT * FROM component_motherboard";
+      break;
+    default:
+      sql = `SELECT *
+      FROM component_cpu
+      JOIN component_gpu ON component_cpu.idComponent = component_gpu.idComponent
+      JOIN component_motherboard ON component_cpu.idComponent = component_motherboard.idComponent
+      WHERE component_cpu.idComponent = (SELECT idComponent FROM component WHERE ComponentName = "${component}")`;
+  }
+  connection.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log("Liste " + component + " récupéré");
     res.send(JSON.stringify(result));
   });
 });
@@ -142,7 +152,7 @@ app.get("/GetComponentSearch/*", (req, res) => {
   sql = "SELECT * from component";
   connection.query(sql, (err, result) => {
     if (err) throw err;
-    console.log(result);
+    // console.log(result);
     res.send(JSON.stringify(result));
   });
 });
