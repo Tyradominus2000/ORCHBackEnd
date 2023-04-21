@@ -121,9 +121,9 @@ app.get("/GetComponent", (req, res) => {
   });
 });
 
-app.get("/*", (req, res) => {
-  res.send(JSON.stringify("API working"));
-});
+// app.get("/*", (req, res) => {
+//   res.send(JSON.stringify("API working"));
+// });
 
 app.get("/GetComponent/:component", (req, res) => {
   const component = req.params.component;
