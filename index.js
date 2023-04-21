@@ -1,22 +1,25 @@
-const bodyparser = require("body-parser");
 const express = require("express");
+const cookieParser = require("cookie-parser");
+
+const app = express();
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
+const bodyparser = require("body-parser");
 const jsonwebtoken = require("jsonwebtoken");
-const http = require("http");
-const app = express();
-
-const { key, keyPub } = require("./key");
 const saltRounds = 10;
 const port = 8000;
 
-const connection2 = mysql.createConnection({
+const { key, keyPub } = require("./key");
+
+const http = require("http");
+
+const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "orchfull",
 });
-const connection = mysql.createConnection({
+const connection2 = mysql.createConnection({
   host: "sql7.freemysqlhosting.net",
   user: "sql7613818",
   password: "mUFaWrJeKn",
@@ -29,6 +32,8 @@ connection.connect((err) => {
 });
 
 app.use(bodyparser.json());
+
+app.use(cookieParser());
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -55,41 +60,36 @@ app.post("/AddUser", (req, res) => {
   });
 });
 
-app.post("/VerifyUser", (req, res) => {
+app.post("/Signin", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  let resultat = {};
   console.log(email);
   console.log(password);
 
   const sql = `SELECT * FROM users WHERE Useremail=?`;
   const values = [email];
+
   connection.query(sql, values, async (err, result) => {
     if (err) throw err;
     console.log(result[0]);
     if (result[0] != null) {
-      const response = bcrypt.compare(password, result[0].Userpassword);
-      console.log(response);
-      if (response) {
+      if (bcrypt.compareSync(password, result[0].Userpassword)) {
+        console.log(result[0].idUser.toString());
         const token = jsonwebtoken.sign({}, key, {
           subject: result[0].idUser.toString(),
           expiresIn: 3600 * 24 * 30 * 6,
           algorithm: "RS256",
         });
-        res.cookie("token", token);
-        resultat.logged = true;
-        resultat.id = result[0].idUser;
-        res.send(JSON.stringify(resultat));
+        console.log(token);
+        res.cookie("token", token, {secure: false, sameSite: "none" , httpOnly: false});
+        res.json(result[0]);
       } else {
-        resultat[0].logged = false;
-        resultat[0].mdp = true;
-        console.log("Mot de passe incorect");
-        res.send(JSON.stringify(resultat));
+        console.log("Wrong password or Email");
+        res.send(JSON.stringify(false));
       }
     } else {
-      resultat.logged = false;
-      console.log("Utilisateur non existant");
-      res.send(JSON.stringify(resultat));
+      console.log("Wrong password or Email");
+      res.send(JSON.stringify(false));
     }
   });
 });
@@ -121,10 +121,6 @@ app.get("/GetComponent", (req, res) => {
   });
 });
 
-// app.get("/*", (req, res) => {
-//   res.send(JSON.stringify("API working"));
-// });
-
 app.get("/GetComponent/:component", (req, res) => {
   const component = req.params.component;
   let sql = "";
@@ -132,6 +128,7 @@ app.get("/GetComponent/:component", (req, res) => {
     case "CPU":
       sql = "SELECT * FROM component_cpu";
       break;
+
     case "GPU":
       sql = "SELECT * FROM component_gpu";
       break;
@@ -152,13 +149,8 @@ app.get("/GetComponent/:component", (req, res) => {
   });
 });
 
-app.get("/GetComponentSearch/*", (req, res) => {
-  sql = "SELECT * from component";
-  connection.query(sql, (err, result) => {
-    if (err) throw err;
-    // console.log(result);
-    res.send(JSON.stringify(result));
-  });
+app.get("*", (req, res) => {
+  res.send(JSON.stringify("API working"));
 });
 
 app.listen(port, () => {
