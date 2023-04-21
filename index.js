@@ -10,17 +10,17 @@ const { key, keyPub } = require("./key");
 const saltRounds = 10;
 const port = 8000;
 
-const connection = mysql.createConnection({
+const connection2 = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "orchfull",
 });
-const connection2 = mysql.createConnection({
-  host: "sql7.freesqldatabase.com",
-  user: "sql7611790",
-  password: "v9snT4PGhc",
-  database: "sql7611790",
+const connection = mysql.createConnection({
+  host: "sql7.freemysqlhosting.net",
+  user: "sql7613818",
+  password: "mUFaWrJeKn",
+  database: "sql7613818",
 });
 
 connection.connect((err) => {
