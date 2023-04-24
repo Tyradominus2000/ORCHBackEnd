@@ -13,13 +13,13 @@ const { key, keyPub } = require("./key");
 
 const http = require("http");
 
-const connection = mysql.createConnection({
+const connection2 = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "orchfull",
 });
-const connection2 = mysql.createConnection({
+const connection = mysql.createConnection({
   host: "sql7.freemysqlhosting.net",
   user: "sql7613818",
   password: "mUFaWrJeKn",
@@ -36,9 +36,10 @@ app.use(bodyparser.json());
 app.use(cookieParser());
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header('Access-Control-Allow-Credentials', true);
   next();
 });
 
@@ -81,7 +82,10 @@ app.post("/Signin", (req, res) => {
           algorithm: "RS256",
         });
         console.log(token);
-        res.cookie("token", token, {secure: false, sameSite: "none" , httpOnly: false});
+        res.cookie("token", token, {
+          secure: true,
+          sameSite: "none",
+        });
         res.json(result[0]);
       } else {
         console.log("Wrong password or Email");
@@ -136,17 +140,49 @@ app.get("/GetComponent/:component", (req, res) => {
       sql = "SELECT * FROM component_motherboard";
       break;
     default:
-      sql = `SELECT *
-      FROM component_cpu
-      JOIN component_gpu ON component_cpu.idComponent = component_gpu.idComponent
-      JOIN component_motherboard ON component_cpu.idComponent = component_motherboard.idComponent
-      WHERE component_cpu.idComponent = (SELECT idComponent FROM component WHERE ComponentName = "${component}")`;
+      let sqlDefault = `SELECT * FROM component`;
+      connection.query(sqlDefault, (err, result) => {
+        if (err) throw err;
+        let valid = [{}];
+        let i = 0;
+        let resultDefault = [];
+        result.map((r) => {
+          if (r.ComponentName.startsWith(component)) {
+            valid[i] = { id: r.idComponent, type: r.ComponentType };
+            i++;
+          }
+        });
+        console.log(valid);
+        let sqlSwitch;
+        valid.map((v) => {
+          switch (v.type) {
+            case "CPU":
+              sqlSwitch = `SELECT * from component_cpu WHERE idComponent="${v.id}"`;
+              break;
+            case "MB":
+              sqlSwitch = `SELECT * from component_motherboard WHERE idComponent="${v.id}"`;
+              break;
+            case "GPU":
+              sqlSwitch = `SELECT * from component_gpu WHERE idComponent="${v.id}"`;
+              break;
+            default:
+          }
+          connection.query(sqlSwitch, (err, result) => {
+            if (err) throw err;
+            resultDefault[i] = result;
+          });
+        });
+        console.log(result);
+      });
   }
-  connection.query(sql, (err, result) => {
-    if (err) throw err;
-    console.log("Liste " + component + " récupéré");
-    res.send(JSON.stringify(result));
-  });
+  if (sql) {
+    connection.query(sql, (err, result) => {
+      if (err) throw err;
+      console.log("Liste " + component + " récupéré");
+      console.log("Result" + result);
+      res.send(JSON.stringify(result));
+    });
+  }
 });
 
 app.get("*", (req, res) => {
