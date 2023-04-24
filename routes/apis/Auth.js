@@ -18,15 +18,15 @@ router.get("/", async (req, res) => {
           delete result[0].Userpassword;
           res.send(result);
         } else {
-          res.status(400).end();
+          res.send(false);
         }
       });
     } catch (error) {
       console.error(error);
-      res.status(400).end();
+      res.send(false);
     }
   } else {
-    res.status(400).end();
+    res.send(false);
   }
 });
 
