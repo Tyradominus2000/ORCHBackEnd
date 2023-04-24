@@ -196,7 +196,7 @@ app.post("/UploadPP", (req, res) => {
 app.use(routes);
 
 app.use("*", (res, req) => {
-  res.send(404).end();
+  res.status(404).end();
 });
 
 app.listen(port, () => {
