@@ -5,7 +5,7 @@ const apiGetUser = require("./GetUser");
 
 router.use("/Signin", apiSignin);
 router.use("/AddUser", apiAddUser);
-router.user("/GetUser", apiGetUser);
+router.use("/GetUser", apiGetUser);
 
 router.get("/", (req, res) => {
   res.send(JSON.stringify("API working"));
