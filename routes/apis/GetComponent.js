@@ -1,4 +1,7 @@
 const router = require("express").Router();
+const connection = require("../../context/apiConnexion");
+
+console.log("GetComponent");
 
 router.get("/", (req, res) => {
   sql = "SELECT * from component";

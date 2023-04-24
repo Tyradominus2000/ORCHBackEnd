@@ -1,10 +1,13 @@
 const cookieParser = require("cookie-parser");
 
+const connection = require("../../context/apiConnexion");
 const router = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 const { key, keyPub } = require("../../key");
+
+console.log("Signin");
 
 router.post("/", (req, res) => {
   const email = req.body.email;

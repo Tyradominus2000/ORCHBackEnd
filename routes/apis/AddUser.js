@@ -1,5 +1,9 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
+const connection = require("../../context/apiConnexion");
+const saltRounds = 10;
+
+console.log("AddUser");
 
 router.post("/", (req, res) => {
   const username = req.body.username;
