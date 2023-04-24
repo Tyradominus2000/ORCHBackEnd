@@ -4,7 +4,7 @@ router.delete("/", (req, res) => {
   res.clearCookie("token", {
     domain: "localhost",
     path: "/",
-    httpOnly: true,
+    httpOnly: false,
     sameSite: "none",
     secure: true,
   });
