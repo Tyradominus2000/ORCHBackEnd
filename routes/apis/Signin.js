@@ -4,7 +4,7 @@ const router = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const { key, keyPub } = require("./key");
+const { key, keyPub } = require("../../key");
 
 router.post("/", (req, res) => {
   const email = req.body.email;
