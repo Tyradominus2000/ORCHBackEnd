@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const connection = require("../../context/apiConnexion");
 const { key, keyPub } = require("../../key");
+const jsonwebtoken = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {
   console.log("In Auth");
@@ -14,7 +15,8 @@ router.get("/", async (req, res) => {
       connection.query(sql, (err, result) => {
         if (err) throw err;
         if (result[0]) {
-          return result;
+          delete result[0].Userpassword;
+          res.send(result);
         } else {
           res.status(400).end();
         }

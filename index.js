@@ -8,58 +8,54 @@ const routes = require("./routes");
 const mysql = require("mysql");
 // const bcrypt = require("bcrypt");
 const bodyparser = require("body-parser");
-// const jsonwebtoken = require("jsonwebtoken");
-// const saltRounds = 10;
 const connection = require("./context/apiConnexion");
 const port = 8000;
 
-// const { key, keyPub } = require("./key");
 
 const http = require("http");
-
 
 connection.connect((err) => {
   if (err) throw err;
   console.log("Connecté a la base de donnée");
 });
 
-
-app.use(bodyparser.json());
-//middleware pour extraire les cookies
-app.use(cookieParser());
-
-
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
   res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
-  res.header('Access-Control-Allow-Credentials', true);
+  res.header("Access-Control-Allow-Credentials", true);
   next();
 });
 
+//middleware pour extraire les cookies
+app.use(cookieParser());
+app.use(bodyparser.json());
+app.use(routes);
+
 /*AddUser
 // app.post("/AddUser", (req, res) => {
-//   const username = req.body.username;
-//   const email = req.body.email;
-//   const password = req.body.password;
-//   //hash the password
-//   bcrypt.hash(password, saltRounds, function (err, hash) {
-//     // Store hash in your password DB.
-//     if (err) throw err;
-//     const sql = `INSERT INTO users (Username, Useremail, Userpassword) VALUES ( ?, ?, ?)`;
-//     const values = [username, email, hash];
-//     connection.query(sql, values, (err, result) => {
-//       if (err) throw err;
-//       console.log("Utilisateur ajouté à la base de données");
-//       res.send(JSON.stringify(true));
-//     });
-//   });
-// });
-*/
+  //   const username = req.body.username;
+  //   const email = req.body.email;
+  //   const password = req.body.password;
+  //   //hash the password
+  //   bcrypt.hash(password, saltRounds, function (err, hash) {
+    //     // Store hash in your password DB.
+    //     if (err) throw err;
+    //     const sql = `INSERT INTO users (Username, Useremail, Userpassword) VALUES ( ?, ?, ?)`;
+    //     const values = [username, email, hash];
+    //     connection.query(sql, values, (err, result) => {
+      //       if (err) throw err;
+      //       console.log("Utilisateur ajouté à la base de données");
+      //       res.send(JSON.stringify(true));
+      //     });
+      //   });
+      // });
+      */
 
 /*SignIn
-// app.post("/Signin", (req, res) => {
-//   const email = req.body.email;
+     // app.post("/Signin", (req, res) => {
+       //   const email = req.body.email;
+
 //   const password = req.body.password;
 //   console.log(email);
 //   console.log(password);
@@ -192,8 +188,6 @@ app.post("/UploadPP", (req, res) => {
   res.send(true);
 });
 */
-
-app.use(routes);
 
 app.use("*", (res, req) => {
   res.status(404).end();
