@@ -1,42 +1,33 @@
 const express = require("express");
+//Dépendance pour gérer les cookies
 const cookieParser = require("cookie-parser");
 
-const routes = require("./routes");
+//Initialisation de l'APP
 const app = express();
+const routes = require("./routes");
 const mysql = require("mysql");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 const bodyparser = require("body-parser");
-const jsonwebtoken = require("jsonwebtoken");
-const saltRounds = 10;
+// const jsonwebtoken = require("jsonwebtoken");
+// const saltRounds = 10;
+const connection = require("./context/apiConnexion");
 const port = 8000;
 
-const { key, keyPub } = require("./key");
+// const { key, keyPub } = require("./key");
 
 const http = require("http");
 
-const connection2 = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "orchfull",
-});
-const connection = mysql.createConnection({
-  host: "sql7.freemysqlhosting.net",
-  user: "sql7613818",
-  password: "mUFaWrJeKn",
-  database: "sql7613818",
-});
 
 connection.connect((err) => {
   if (err) throw err;
   console.log("Connecté a la base de donnée");
 });
 
-app.use(routes);
 
 app.use(bodyparser.json());
-
+//middleware pour extraire les cookies
 app.use(cookieParser());
+
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -120,11 +111,6 @@ app.use((req, res, next) => {
 // });
 */
 
-app.post("/UploadPP", (req, res) => {
-  console.log("req.body " + req.body);
-  res.send(true);
-});
-
 /*GetComponent
 // app.get("/GetComponent", (req, res) => {
 //   sql = "SELECT * from component";
@@ -199,6 +185,19 @@ app.post("/UploadPP", (req, res) => {
 // app.get("*", (req, res) => {
 //   res.send(JSON.stringify("API working"));
 // });
+
+/*UploadPP
+app.post("/UploadPP", (req, res) => {
+  console.log("req.body " + req.body);
+  res.send(true);
+});
+*/
+
+app.use(routes);
+
+app.use("*", (res, req) => {
+  res.send(404).end();
+});
 
 app.listen(port, () => {
   console.log(`Server Node écoutant sur le port ${port}`);
