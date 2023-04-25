@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 router.delete("/", (req, res) => {
   res.clearCookie("token", {
-    domain: "localhost",
+    domain: "backend-zuaq.onrender.com",
     path: "/",
     httpOnly: false,
     sameSite: "none",
