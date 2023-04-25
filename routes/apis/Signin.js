@@ -30,7 +30,11 @@ router.post("/", (req, res) => {
           algorithm: "RS256",
         });
         console.log(token);
-        res.cookie("token", token, {sameSite: "none", secure: true, httpOnly: false});
+        res.cookie("token", token, {
+          sameSite: "none",
+          secure: true,
+          httpOnly: false,
+        });
         res.json(result[0]);
       } else {
         console.log("Wrong password or Email");
