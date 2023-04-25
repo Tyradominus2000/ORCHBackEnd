@@ -12,7 +12,7 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/:component", (req, res) => {
+router.get("/:component", async (req, res) => {
   const component = req.params.component;
   let sql = "";
   switch (component) {
@@ -28,45 +28,28 @@ router.get("/:component", (req, res) => {
       break;
     default:
       let sqlDefault = `SELECT * FROM component`;
-      connection.query(sqlDefault, (err, result) => {
+      connection.query(sqlDefault, async (err, result) => {
         if (err) throw err;
-        let valid = [{}];
+        let valid = [];
         let i = 0;
-        let resultDefault = [];
         result.map((r) => {
-          if (r.ComponentName.startsWith(component)) {
-            valid[i] = { id: r.idComponent, type: r.ComponentType };
-            i++;
+          if (r.ComponentName.toUpperCase().startsWith(component.toUpperCase())) {
+            valid[i] = r.idComponent;
+            i++
           }
         });
-        console.log(valid);
-        let sqlSwitch;
-        valid.map((v) => {
-          switch (v.type) {
-            case "CPU":
-              sqlSwitch = `SELECT * from component_cpu WHERE idComponent="${v.id}"`;
-              break;
-            case "MB":
-              sqlSwitch = `SELECT * from component_motherboard WHERE idComponent="${v.id}"`;
-              break;
-            case "GPU":
-              sqlSwitch = `SELECT * from component_gpu WHERE idComponent="${v.id}"`;
-              break;
-            default:
-          }
-          connection.query(sqlSwitch, (err, result) => {
-            if (err) throw err;
-            resultDefault[i] = result;
-          });
+        const sqlSwitch = `SELECT * FROM component_cpu WHERE idComponent IN (${valid})`;
+        connection.query(sqlSwitch, async (err, result) => {
+          if (err) throw err;
+          console.log("Liste récupéré");
+          res.send(JSON.stringify(result));
         });
-        console.log(result);
       });
   }
   if (sql) {
     connection.query(sql, (err, result) => {
       if (err) throw err;
       console.log("Liste " + component + " récupéré");
-      console.log("Result" + result);
       res.send(JSON.stringify(result));
     });
   }
