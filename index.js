@@ -5,8 +5,6 @@ const cookieParser = require("cookie-parser");
 //Initialisation de l'APP
 const app = express();
 const routes = require("./routes");
-const mysql = require("mysql");
-// const bcrypt = require("bcrypt");
 const bodyparser = require("body-parser");
 const connection = require("./context/apiConnexion");
 const port = 8000;
