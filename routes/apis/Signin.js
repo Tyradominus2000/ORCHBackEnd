@@ -1,6 +1,6 @@
 const cookieParser = require("cookie-parser");
 
-const connection = require("../../context/apiConnexion");
+const connection = require("../../database/apiConnexion");
 const router = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcrypt");

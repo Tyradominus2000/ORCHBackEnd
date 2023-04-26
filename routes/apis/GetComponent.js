@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const connection = require("../../context/apiConnexion");
+const connection = require("../../database/apiConnexion");
 
 console.log("GetComponent");
 

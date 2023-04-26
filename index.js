@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const routes = require("./routes");
 const bodyparser = require("body-parser");
-const connection = require("./context/apiConnexion");
+const connection = require("./database/apiConnexion");
 const port = 8000;
 
 const API_FrontURL = "https://orch-full.vercel.app";
