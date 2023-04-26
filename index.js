@@ -9,8 +9,8 @@ const bodyparser = require("body-parser");
 const connection = require("./database/apiConnexion");
 const port = 8000;
 
-const API_FrontURL = "https://orch-full.vercel.app";
-// const API_FrontURL = "http://localhost:3000"
+// const API_FrontURL = "https://orch-full.vercel.app";
+const API_FrontURL = "http://localhost:3000";
 
 const http = require("http");
 
@@ -32,8 +32,10 @@ app.use(cookieParser());
 app.use(bodyparser.json());
 app.use(routes);
 
-app.use("*", (res, req) => {
-  res.send(404).end();
+app.set("view engine", "ejs");
+
+app.use("*", (req, res) => {
+  res.status(404).end();
 });
 
 app.listen(port, () => {

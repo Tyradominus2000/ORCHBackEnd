@@ -1,11 +1,11 @@
 const mysql = require("mysql");
 
-const connection2 = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "orchfull",
-});
+// const connection = mysql.createConnection({
+//   host: "localhost",
+//   user: "root",
+//   password: "",
+//   database: "orchfull",
+// });
 
 const connection = mysql.createConnection({
   host: "sql7.freemysqlhosting.net",
