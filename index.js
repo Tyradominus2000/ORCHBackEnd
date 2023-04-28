@@ -30,6 +30,7 @@ app.use((req, res, next) => {
 //middleware pour extraire les cookies
 app.use(cookieParser());
 app.use(bodyparser.json());
+app.use(bodyparser.urlencoded({ extended: true }));
 app.use(routes);
 
 app.set("view engine", "ejs");
@@ -41,3 +42,4 @@ app.use("*", (req, res) => {
 app.listen(port, () => {
   console.log(`Server Node écoutant sur le port ${port}`);
 });
+

@@ -4,15 +4,18 @@ const connection = require("../../database/apiConnexion");
 console.log("GetUser");
 
 router.post("/", (req, res) => {
-  const id = req.body.id;
-  console.log(id);
+  const email = req.body.value;
+  console.log(email);
 
-  const sql = `SELECT idUser, Useremail, Username FROM users WHERE idUser=?`;
-  const values = [id];
+  const sql = `SELECT * FROM users WHERE Useremail=?`;
+  const values = email;
   connection.query(sql, values, (err, result) => {
     if (err) throw err;
-    console.log(result);
-    res.send(JSON.stringify(result));
+    if (result[0]) {
+      res.send(JSON.stringify(true));
+    } else {
+      res.send(JSON.stringify(false));
+    }
   });
 });
 
