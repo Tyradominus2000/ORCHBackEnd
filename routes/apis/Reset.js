@@ -1,5 +1,6 @@
 const connection = require("../../database/apiConnexion");
 const jsonwebtoken = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -10,7 +11,7 @@ router.post("/", (req, res) => {
   console.log(email);
   try {
     const sql = `SELECT * FROM users WHERE Useremail= "${email}"`;
-    connection.query(sql, (err, result) => {
+    connection.query(sql, async (err, result) => {
       if (err) throw err;
       if (result[0]) {
         const token = jsonwebtoken.sign(
@@ -23,7 +24,32 @@ router.post("/", (req, res) => {
         );
         const link = `http://localhost:8000/apis/Reset/${result[0].idUser}/${token}`;
         console.log(link);
-        res.send(JSON.stringify(link));
+        res.send(JSON.stringify(true));
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "tristan.obszynski@gmail.com",
+            pass: "placeholder",
+          },
+        });
+
+        const mailOptions = {
+          from: "yeah",
+          to: result[0].Useremail,
+          subject: "Sending Email using Node.js",
+          text: link,
+        };
+
+        let info = transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+          }
+        });
+        console.log("Message sent: %s", info);
+      
+
       } else {
         res.send(JSON.stringify(false));
       }
