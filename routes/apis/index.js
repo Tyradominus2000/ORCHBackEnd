@@ -6,6 +6,7 @@ const apiGetComponent = require("./GetComponent");
 const apiAuth = require("./Auth");
 const apiLogout = require("./Logout");
 const apiReset = require("./Reset");
+const apiUpdateUser = require("./UpdateUser");
 
 router.use("/Signin", apiSignin);
 router.use("/AddUser", apiAddUser);
@@ -14,6 +15,7 @@ router.use("/GetComponent", apiGetComponent);
 router.use("/Auth", apiAuth);
 router.use("/Logout", apiLogout);
 router.use("/Reset", apiReset);
+router.use("/UpdateUser", apiUpdateUser);
 
 router.get("/", (req, res) => {
   res.send(JSON.stringify("API working"));
