@@ -7,6 +7,7 @@ const apiAuth = require("./Auth");
 const apiLogout = require("./Logout");
 const apiReset = require("./Reset");
 const apiUpdateUser = require("./UpdateUser");
+const apiUpdatePassword = require("./UpdatePassword");
 
 router.use("/Signin", apiSignin);
 router.use("/AddUser", apiAddUser);
@@ -16,6 +17,7 @@ router.use("/Auth", apiAuth);
 router.use("/Logout", apiLogout);
 router.use("/Reset", apiReset);
 router.use("/UpdateUser", apiUpdateUser);
+router.use("/UpdatePassword", apiUpdatePassword);
 
 router.get("/", (req, res) => {
   res.send(JSON.stringify("API working"));
