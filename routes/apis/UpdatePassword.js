@@ -25,14 +25,11 @@ router.post("/", (req, res) => {
         console.log(password);
         console.log(result[0].Userpassword);
         if (bcrypt.compareSync(password, result[0].Userpassword)) {
-          console.log("In mdp");
           bcrypt.hash(newPassword, saltRounds, function (err, hash) {
-            if (err) throw err;
-            console.log("In hash");
+            if (err) throw err;;
             const sql = `UPDATE users SET Userpassword = "${hash}" WHERE idUser = "${result[0].idUser}"`;
             connection.query(sql, (err, result) => {
               if (err) throw err;
-              console.log("In connexion");
               res.send(JSON.stringify(true));
             });
           });

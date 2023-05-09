@@ -48,8 +48,6 @@ router.post("/", (req, res) => {
           }
         });
         console.log("Message sent: %s", info);
-      
-
       } else {
         res.send(JSON.stringify(false));
       }
@@ -60,7 +58,7 @@ router.post("/", (req, res) => {
 });
 
 router.get("/:id/:token", async (req, res) => {
-  const { id, token } = req.params;
+  const { token } = req.params;
   // console.log("id : " + id + " token : " + token);
   try {
     const verify = jsonwebtoken.verify(token, keyPub);
@@ -75,7 +73,7 @@ router.post("/:id/:token", async (req, res) => {
   const { password } = req.body;
   console.log(password);
   console.log(req.body);
-  const sql = `SELECT * FROM users WHERE idUser = "${id}"`;
+  const sql = `SELECT * FROM user WHERE user_id = "${id}"`;
   connection.query(sql, async (err, result) => {
     if (err) throw err;
     if (result[0]) {
