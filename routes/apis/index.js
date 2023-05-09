@@ -8,6 +8,7 @@ const apiLogout = require("./Logout");
 const apiReset = require("./Reset");
 const apiUpdateUser = require("./UpdateUser");
 const apiUpdatePassword = require("./UpdatePassword");
+const apiUploadPP = require("./UploadPP");
 
 router.use("/Signin", apiSignin);
 router.use("/AddUser", apiAddUser);
@@ -18,6 +19,7 @@ router.use("/Logout", apiLogout);
 router.use("/Reset", apiReset);
 router.use("/UpdateUser", apiUpdateUser);
 router.use("/UpdatePassword", apiUpdatePassword);
+router.use("/UploadPP", apiUploadPP);
 
 router.get("/", (req, res) => {
   res.send(JSON.stringify("API working"));
