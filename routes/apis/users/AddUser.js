@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const connection = require("../../database/apiConnexion");
+const connection = require("../../../database/apiConnexion");
 const saltRounds = 10;
 
 console.log("AddUser");

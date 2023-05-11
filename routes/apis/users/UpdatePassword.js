@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
-const { key, keyPub } = require("../../key");
+const { key, keyPub } = require("../../../key");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-const connection = require("../../database/apiConnexion");
+const connection = require("../../../database/apiConnexion");
 
 router.post("/", (req, res) => {
   const { token } = req.cookies;

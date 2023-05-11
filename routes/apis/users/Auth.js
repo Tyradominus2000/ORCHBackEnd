@@ -1,6 +1,6 @@
 const router = require("express").Router();
-const connection = require("../../database/apiConnexion");
-const { key, keyPub } = require("../../key");
+const connection = require("../../../database/apiConnexion");
+const { key, keyPub } = require("../../../key");
 const jsonwebtoken = require("jsonwebtoken");
 
 router.get("/", async (req, res) => {

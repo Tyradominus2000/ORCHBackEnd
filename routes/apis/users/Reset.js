@@ -1,10 +1,10 @@
-const connection = require("../../database/apiConnexion");
+const connection = require("../../../database/apiConnexion");
 const jsonwebtoken = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const { key, keyPub } = require("../../key");
+const { key, keyPub } = require("../../../key");
 
 router.post("/", (req, res) => {
   const email = req.body.email;

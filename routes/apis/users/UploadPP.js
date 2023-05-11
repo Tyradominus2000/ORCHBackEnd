@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
-const connection = require("../../database/apiConnexion");
-const { keyPub } = require("../../key");
+const connection = require("../../../database/apiConnexion");
+const { keyPub } = require("../../../key");
 
 router.post("/", async (req, res) => {
   const { token } = req.cookies;

@@ -1,9 +1,9 @@
-const connection = require("../../database/apiConnexion");
+const connection = require("../../../database/apiConnexion");
 const router = require("express").Router();
 const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const { key, keyPub } = require("../../key");
+const { key, keyPub } = require("../../../key");
 
 console.log("Signin");
 

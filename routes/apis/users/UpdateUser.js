@@ -1,9 +1,9 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const jsonwebtoken = require("jsonwebtoken");
-const { key, keyPub } = require("../../key");
+const { key, keyPub } = require("../../../key");
 
-const connection = require("../../database/apiConnexion");
+const connection = require("../../../database/apiConnexion");
 
 router.post("/", (req, res) => {
   let username = req.body.username;
