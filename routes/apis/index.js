@@ -9,6 +9,7 @@ const apiReset = require("./Reset");
 const apiUpdateUser = require("./UpdateUser");
 const apiUpdatePassword = require("./UpdatePassword");
 const apiUploadPP = require("./UploadPP");
+const apiSendReport = require("./SendReport");
 
 router.use("/Signin", apiSignin);
 router.use("/AddUser", apiAddUser);
@@ -20,6 +21,7 @@ router.use("/Reset", apiReset);
 router.use("/UpdateUser", apiUpdateUser);
 router.use("/UpdatePassword", apiUpdatePassword);
 router.use("/UploadPP", apiUploadPP);
+router.use("/SendReport", apiSendReport);
 
 router.get("/", (req, res) => {
   res.send(JSON.stringify("API working"));
